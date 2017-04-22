@@ -1,0 +1,65 @@
+<div class="card mb-3">
+    <div class="card-header">完整示例</div>
+    <div class="card-block">
+        <ueditor [(ngModel)]="full_source" #full required></ueditor>
+        <div class="card card-outline-secondary mt-3">
+            <div class="card-block">
+                <blockquote class="card-blockquote" [innerHTML]="full_source"></blockquote>
+            </div>
+        </div>
+        <h5 style="border-bottom:1px solid #eee;" class="mt-3 mb-3 pb-3">语言切换</h5>
+        <div class="mb-3">
+            <button type="button" (click)="setLanguage('zh-cn')" class="btn btn-primary btn-sm">zh-cn</button>
+            <button type="button" (click)="setLanguage('en')" class="btn btn-primary btn-sm">en</button>
+        </div>
+        <h5 style="border-bottom:1px solid #eee;" class="mt-3 mb-3 pb-3">常用API</h5>
+        <div class="mb-3">
+            <button class="btn btn-primary btn-sm" (click)="getAllHtml()">获得整个html的内容</button>
+            <button class="btn btn-primary btn-sm" (click)="getContent()">获得内容</button>
+            <button class="btn btn-primary btn-sm" (click)="setContent()">写入内容</button>
+            <button class="btn btn-primary btn-sm" (click)="setContent(true)">追加内容</button>
+            <button class="btn btn-primary btn-sm" (click)="getContentTxt()">获得纯文本</button>
+            <button class="btn btn-primary btn-sm" (click)="getPlainTxt()">获得带格式的纯文本</button>
+            <button class="btn btn-primary btn-sm" (click)="hasContent()">判断是否有内容</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.focus()">使编辑器获得焦点</button>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary btn-sm" (click)="getText()">获得当前选中的文本</button>
+            <button class="btn btn-primary btn-sm" (click)="insertHtml()">插入给定的内容</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.setEnabled()">可以编辑</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.setDisabled('fullscreen')">不可编辑</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.setHide()">隐藏编辑器</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.setShow()">显示编辑器</button>
+            <button class="btn btn-primary btn-sm" (click)="full.Instance.setHeight(300)">设置编辑器的高度为300</button>
+        </div>
+        <h5 style="border-bottom:1px solid #eee;" class="mt-3 mb-3 pb-3">事件监听</h5>
+        <div class="mb-3">
+            <button class="btn btn-primary btn-sm" (click)="addListenerFocus()">监听focus事件</button>
+            <button class="btn btn-primary btn-sm" (click)="removeListenerFocus()">移除focus事件</button>
+            focus: {{focus}}
+        </div>
+    </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header">配置项</div>
+    <div class="card-block">
+        <ueditor [(ngModel)]="config_source" [config]="config"></ueditor>
+        <div class="card card-outline-secondary mt-3">
+            <div class="card-block">
+                <blockquote class="card-blockquote" [innerHTML]="config_source"></blockquote>
+            </div>
+        </div>
+    </div>
+</div>
+<form #mForm="ngForm">
+    <div class="card mb-3">
+        <div class="card-header">表单非空校验</div>
+        <div class="card-block">
+            <p>加上 <code>required</code> 即可。</p>
+            <ueditor [(ngModel)]="form_source" required name="form_source"></ueditor>
+            <div class="text-right mt-3">
+                <button class="btn btn-primary btn-block" [disabled]="!mForm.form.valid || !mForm.form.dirty" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
