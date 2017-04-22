@@ -22,7 +22,8 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
     private instance: any;
     private value: string;
     private events:any = {};
-    protected loading: boolean = true;
+    
+    loading: boolean = true;
 
     @Input() path: string;
     @Input() config: any;
