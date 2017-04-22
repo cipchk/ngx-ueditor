@@ -7,7 +7,11 @@ declare var UE: any;
 
 @Component({
     selector: 'ueditor',
-    template: `<textarea #host></textarea>`,
+    template: `
+    <textarea #host class="ueditor-textarea"></textarea>
+    <p class="loading" *ngIf="loading">{{loadingTip}}</p>
+    `,
+    styles: [ `.ueditor-textarea{display:none;}` ],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => UeditorComponent),
@@ -18,9 +22,11 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
     private instance: any;
     private value: string;
     private events:any = {};
+    protected loading: boolean = true;
 
     @Input() path: string;
     @Input() config: any;
+    @Input() loadingTip: string = '加载中...';
     @ViewChild('host') host: ElementRef;
 
     @Output() onReady = new EventEmitter();
@@ -46,6 +52,7 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
     }
 
     private init(options?: any) {
+        this.loading = false;
         if (!window.UE)
             throw new Error('uedito js文件加载失败');
 
