@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { HighlightJsModule } from 'ngx-highlight-js';
 
 import { UeditorModule } from 'ngx-ueditor';
 
@@ -15,6 +16,7 @@ import { DemoComponent } from './components/demo.component';
     FormsModule,
     HttpModule,
     CommonModule,
+    HighlightJsModule,
     
     UeditorModule
   ],
@@ -22,7 +24,7 @@ import { DemoComponent } from './components/demo.component';
     AppComponent,
     DemoComponent
   ],
-  providers: [ ],
+  providers: [  ],
   bootstrap: [AppComponent]
 })
 

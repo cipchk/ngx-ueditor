@@ -37,7 +37,8 @@
     "test-coverage": "ng test -sr -cc",
     "version": "npm run flow.changelog && git add -A"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "peerDependencies": {},
   "devDependencies": {
     "@angular/cli": "1.0.0",
@@ -54,6 +55,7 @@
     "@angular/tsc-wrapped": "4.0.1",
     "@types/jasmine": "2.5.47",
     "@types/node": "~6.0.60",
+    "ngx-highlight-js": "^1.0.0",
     "bootstrap": "^3.3.7",
     "classlist-polyfill": "^1.0.3",
     "codelyzer": "~2.0.0",

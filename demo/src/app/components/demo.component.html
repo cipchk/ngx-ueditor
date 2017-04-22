@@ -1,7 +1,8 @@
 <div class="card mb-3">
     <div class="card-header">完整示例</div>
     <div class="card-block">
-        <ueditor [(ngModel)]="full_source" #full required></ueditor>
+        <textarea highlight-js>&lt;ueditor [(ngModel)]="full_source" #full></ueditor></textarea>
+        <ueditor [(ngModel)]="full_source" #full></ueditor>
         <div class="card card-outline-secondary mt-3">
             <div class="card-block">
                 <blockquote class="card-blockquote" [innerHTML]="full_source"></blockquote>
@@ -43,10 +44,24 @@
 <div class="card mb-3">
     <div class="card-header">配置项</div>
     <div class="card-block">
-        <ueditor [(ngModel)]="config_source" [config]="config"></ueditor>
-        <div class="card card-outline-secondary mt-3">
-            <div class="card-block">
-                <blockquote class="card-blockquote" [innerHTML]="config_source"></blockquote>
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea highlight-js>
+                    // config
+{
+    toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold', 'test']],
+    autoClearinitialContent: true,
+    wordCount: false
+}
+                </textarea>
+            </div>
+            <div class="col-sm-6">
+                <ueditor [(ngModel)]="config_source" [config]="config"></ueditor>
+                <div class="card card-outline-secondary mt-3">
+                    <div class="card-block">
+                        <blockquote class="card-blockquote" [innerHTML]="config_source"></blockquote>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +70,7 @@
     <div class="card mb-3">
         <div class="card-header">表单非空校验</div>
         <div class="card-block">
-            <p>加上 <code>required</code> 即可。</p>
+            <textarea highlight-js>&lt;ueditor [(ngModel)]="full_source" #full required></ueditor></textarea>
             <ueditor [(ngModel)]="form_source" required name="form_source"></ueditor>
             <div class="text-right mt-3">
                 <button class="btn btn-primary btn-block" [disabled]="!mForm.form.valid || !mForm.form.dirty" type="submit">保存</button>
