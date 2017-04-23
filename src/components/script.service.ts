@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from "rxjs/Subject";
 
-declare var document: any;
+declare const document: any;
 
 @Injectable()
 export class ScriptService {

@@ -2,8 +2,11 @@ import { Component, Input, forwardRef, ViewChild, ElementRef, OnDestroy, EventEm
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { ScriptService } from './script.service';
-declare var window: any;
-declare var UE: any;
+
+declare const window: any;
+declare const UE: any;
+
+export type EventTypes = 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange';
 
 @Component({
     selector: 'ueditor',
@@ -130,12 +133,8 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
 
     /**
      * 添加编辑器事件
-     * 
-     * @param {('destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange')} eventName 
-     * @param {Function} fn 
      */
-    addListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange', 
-                fn: Function): void {
+    addListener(eventName: EventTypes, fn: Function): void {
         if (this.events[eventName]) return;
         this.events[eventName] = fn;
         this.instance.addListener(eventName, fn);
@@ -143,10 +142,8 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
 
     /**
      * 移除编辑器事件
-     * 
-     * @param {('destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange')} eventName 
      */
-    removeListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange'): void {
+    removeListener(eventName: EventTypes): void {
         if (!this.events[eventName]) return;
         this.instance.removeListener(eventName, this.events[eventName]);
         delete this.events[eventName];
