@@ -1,5 +1,5 @@
 # ngx-ueditor
-Angular2.x for Baidu UEditor
+Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor)）
 
 [![NPM version](https://img.shields.io/npm/v/ngx-ueditor.svg)](https://www.npmjs.com/package/ngx-ueditor)
 [![Build Status](https://travis-ci.org/cipchk/ngx-ueditor.svg?branch=master)](https://travis-ci.org/cipchk/ngx-ueditor)
