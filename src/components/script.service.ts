@@ -47,7 +47,6 @@ export class ScriptService {
             node.type = 'text/javascript';
             node.src = path;
             node.charset = 'utf-8';
-            document.getElementsByTagName('head')[0].appendChild(node);
             if (node.readyState) { // IE
                 node.onreadystatechange = () => {
                     if (node.readyState === "loaded" || node.readyState === "complete") {
