@@ -12,4 +12,14 @@ export class UEditorConfig {
      * @type {string}
      */
     path?: string;
+
+    /**
+     * Hook
+     * 
+     * @type {Promise<any>}
+     */
+    hook?: Function;
+
+    // 用于标记hook是否已经注册完成
+    _hook_finished?: boolean = false;
 }

@@ -29,11 +29,13 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
     private events:any = {};
     
     loading: boolean = true;
+    id: string;
 
     @Input() config: any;
     @Input() loadingTip: string = '加载中...';
     @ViewChild('host') host: ElementRef;
 
+    @Output() onPreReady = new EventEmitter<UEditorComponent>();
     @Output() onReady = new EventEmitter<UEditorComponent>();
     @Output() onDestroy = new EventEmitter();
     @Output() onContentChange = new EventEmitter();
@@ -47,6 +49,10 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
         this.path = this.defConfig && this.defConfig.path;
         if (!this.path) this.path = './assets/ueditor/';
 
+        // 构建一个虚拟id
+        this.id = 'ueditor-' + new Date().getTime();
+        this.host.nativeElement.id = this.id;
+
         // 已经存在对象无须进入懒加载模式
         if (window.UE) {
             this.init();
@@ -59,25 +65,34 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
     }
 
     private init(options?: any) {
-        this.loading = false;
         if (!window.UE)
             throw new Error('uedito js文件加载失败');
 
         if (this.instance) return;
 
+        // registrer hook
+        if (this.defConfig && this.defConfig.hook) {
+            if (!this.defConfig._hook_finished) {
+                this.defConfig._hook_finished = true;
+                this.defConfig.hook(UE);
+            }
+        }
+
+        this.loading = false;
+        this.onPreReady.emit(this);
         this.zone.runOutsideAngular(() => {
             const opt = Object.assign({
                 UEDITOR_HOME_URL: this.path
             }, this.defConfig && this.defConfig.options, this.config, options);
 
-            let ueditor = new UE.ui.Editor(opt);
-            ueditor.render(this.host.nativeElement);
-            
-            ueditor.addListener('ready', () => {
-                this.instance = ueditor;
-                this.value && this.instance.setContent(this.value);
-                this.onReady.emit(this);
-            });
+            let ueditor = UE.getEditor(this.id, opt);
+            ueditor.ready(() => {
+                this.zone.run(() => {
+                    this.instance = ueditor;
+                    this.value && this.instance.setContent(this.value);
+                    this.onReady.emit(this);
+                });
+            })
             
             ueditor.addListener('contentChange', () => {
                 this.updateValue(ueditor.getContent());

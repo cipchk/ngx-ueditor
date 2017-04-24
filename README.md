@@ -15,6 +15,7 @@ Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor
 + 支持ueditor事件监听与移除
 + 支持语言切换
 + 支持ueditor实例对象直接访问。
++ 支持二次开发。
 
 ## 使用
 
@@ -62,6 +63,7 @@ export class AppModule { }
 | ------- | ------------- | ----- | ----- |
 | config | Object |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
 | loadingTip | string | 加载中... | 初始化提示文本。 |
+| onPreReady | Function |  | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
 | onReady | Function |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
 | onDestroy | Function |  | **编辑器组件销毁**后会触发该事件 |
 | onContentChange | Function |  | 编辑器内容发生改变时会触发该事件 |
@@ -108,6 +110,111 @@ this.full.addListener('focus', () => {
 // 事件移除
 this.full.removeListener('focus');
 ```
+
+## 二次开发
+
+**onPreReady**
+
+`onPreReady` 是指在UEditor创建前会触发；因此，可以利用这个事件做一些针对二次开发的准备工作。比如，针对本实例创建自定义一个按钮：
+
+```html
+<ueditor [(ngModel)]="custom_source" (onPreReady)="onPreReady($event)" [config]="custom"></ueditor>
+```
+
+```typescript
+onPreReady(comp: UEditorComponent) {
+    UE.registerUI('button', function(editor, uiName) {
+        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+        editor.registerCommand(uiName, {
+            execCommand: function() {
+                alert('execCommand:' + uiName)
+            }
+        });
+        //创建一个button
+        var btn = new UE.ui.Button({
+            //按钮的名字
+            name: uiName,
+            //提示
+            title: uiName,
+            //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+            cssRules: 'background-position: -500px 0;',
+            //点击时执行的命令
+            onclick: function() {
+                //这里可以不用执行命令,做你自己的操作也可
+                editor.execCommand(uiName);
+            }
+        });
+        //当点到编辑内容上时，按钮要做的状态反射
+        editor.addListener('selectionchange', function() {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                btn.setDisabled(true);
+                btn.setChecked(false);
+            } else {
+                btn.setDisabled(false);
+                btn.setChecked(state);
+            }
+        });
+        //因为你是添加button,所以需要返回这个button
+        return btn;
+    }, 5, comp.id);
+    // comp.id 是指当前UEditor实例Id
+}
+
+```
+
+**Hook**
+
+hook调用会在UE加载完成后，UEditor初始化前调用，而且这个整个APP中只会调用一次，通过这个勾子可以做全局性的二次开发。
+
+```typescript
+UEditorModule.forRoot({
+    path: 'assets/ueditor/',
+    options: {
+        themePath: '/assets/ueditor/themes/'
+    },
+    hook: (UE: any): void => {
+        // button 自定义按钮将在所有实例中有效。
+        UE.registerUI('button', function(editor, uiName) {
+            //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+            editor.registerCommand(uiName, {
+                execCommand: function() {
+                    alert('execCommand:' + uiName)
+                }
+            });
+            //创建一个button
+            var btn = new UE.ui.Button({
+                //按钮的名字
+                name: uiName,
+                //提示
+                title: uiName,
+                //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+                cssRules: 'background-position: -500px 0;',
+                //点击时执行的命令
+                onclick: function() {
+                    //这里可以不用执行命令,做你自己的操作也可
+                    editor.execCommand(uiName);
+                }
+            });
+            //当点到编辑内容上时，按钮要做的状态反射
+            editor.addListener('selectionchange', function() {
+                var state = editor.queryCommandState(uiName);
+                if (state == -1) {
+                    btn.setDisabled(true);
+                    btn.setChecked(false);
+                } else {
+                    btn.setDisabled(false);
+                    btn.setChecked(state);
+                }
+            });
+            //因为你是添加button,所以需要返回这个button
+            return btn;
+        });
+    }
+})
+
+```
+
 
 ## 表单非空校验
 

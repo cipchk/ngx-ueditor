@@ -2,6 +2,8 @@
 import { Component, OnInit, ViewEncapsulation, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { UEditorComponent } from 'ngx-ueditor';
 
+declare const UE: any;
+
 @Component({
     selector: 'demo',
     templateUrl: './demo.component.html',
@@ -88,10 +90,15 @@ export class DemoComponent {
 
     config_source: string;
     config: any = {
-        toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold', 'test']],
+        toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold' ]],
         autoClearinitialContent: true,
         wordCount: false
     };
 
     form_source: string;
+
+    custom_source: string;
+    custom: any = {
+        toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold', 'button']]
+    };
 }
