@@ -33,7 +33,7 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
     @Input() loadingTip: string = '加载中...';
     @ViewChild('host') host: ElementRef;
 
-    @Output() onReady = new EventEmitter();
+    @Output() onReady = new EventEmitter<UeditorComponent>();
     @Output() onDestroy = new EventEmitter();
     @Output() onContentChange = new EventEmitter();
 
@@ -70,7 +70,7 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
         ueditor.addListener('ready', () => {
             this.instance = ueditor;
             this.value && this.instance.setContent(this.value);
-            this.onReady.emit();
+            this.onReady.emit(this);
         });
         
         ueditor.addListener('contentChange', () => {
