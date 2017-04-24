@@ -62,19 +62,21 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
 
         if (this.instance) return;
 
-        let ueditor = new UE.ui.Editor(Object.assign({
-            UEDITOR_HOME_URL: this.path
-        }, this.config, options));
-        ueditor.render(this.host.nativeElement);
-        
-        ueditor.addListener('ready', () => {
-            this.instance = ueditor;
-            this.value && this.instance.setContent(this.value);
-            this.onReady.emit(this);
-        });
-        
-        ueditor.addListener('contentChange', () => {
-            this.updateValue(ueditor.getContent());
+        this.zone.runOutsideAngular(() => {
+            let ueditor = new UE.ui.Editor(Object.assign({
+                UEDITOR_HOME_URL: this.path
+            }, this.config, options));
+            ueditor.render(this.host.nativeElement);
+            
+            ueditor.addListener('ready', () => {
+                this.instance = ueditor;
+                this.value && this.instance.setContent(this.value);
+                this.onReady.emit(this);
+            });
+            
+            ueditor.addListener('contentChange', () => {
+                this.updateValue(ueditor.getContent());
+            });
         });
     }
 
