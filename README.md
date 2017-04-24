@@ -24,13 +24,23 @@ Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor
 npm install ngx-ueditor --save
 ```
 
-把 `UeditorModule` 模块导入到你项目中。
+把 `UEditorModule` 模块导入到你项目中。
 
 ```typescript
-import { UeditorModule } from 'ngx-ueditor';
+import { UEditorModule } from 'ngx-ueditor';
 
 @NgModule({
-    imports: [BrowserModule, UeditorModule ],
+    imports: [ 
+        BrowserModule,
+        UEditorModule.forRoot({
+            // 指定ueditor.js路径目录
+            path: 'assets/ueditor/',
+            // 默认全局配置项
+            options: {
+                themePath: '/assets/ueditor/themes/'
+            }
+        })
+    ],
     declarations: [AppComponent],
     bootstrap: [AppComponent]
 })
@@ -42,7 +52,6 @@ export class AppModule { }
 ```html
 <ueditor [(ngModel)]="full_source" 
          [config]="{...}"
-         [path]="'/assets/ueditor/'"
          [loadingTip]="'加载中……'"
          (onReady)=""
          (onDestroy)=""
@@ -52,9 +61,8 @@ export class AppModule { }
 | 名称    | 类型           | 默认值  | 描述 |
 | ------- | ------------- | ----- | ----- |
 | config | Object |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
-| path | string | /assets/ueditor/ | ueditor代码根目录路径，以 `/` 结尾。 |
 | loadingTip | string | 加载中... | 初始化提示文本。 |
-| onReady | Function |  | 编辑器准备就绪后会触发该事件，并会传递 `UeditorComponent` 当前实例对象，可用于后续操作。 |
+| onReady | Function |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
 | onDestroy | Function |  | **编辑器组件销毁**后会触发该事件 |
 | onContentChange | Function |  | 编辑器内容发生改变时会触发该事件 |
 
@@ -78,7 +86,7 @@ export class AppModule { }
 
 ```typescript
 export class DemoComponent {
-    @ViewChild('full') full: UeditorComponent;
+    @ViewChild('full') full: UEditorComponent;
     constructor(private el: ElementRef) {}
 
     getAllHtml() {
@@ -108,7 +116,7 @@ this.full.removeListener('focus');
 ## 组件接口
 
 ```typescript
-interface UeditorComponent {
+interface UEditorComponent {
     /**
      * 获取UE实例
      * 

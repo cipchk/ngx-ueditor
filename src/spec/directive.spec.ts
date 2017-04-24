@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UeditorModule } from 'ngx-ueditor';
+import { UEditorModule } from 'ngx-ueditor';
 
 const html = ``;
 
@@ -14,7 +14,7 @@ describe('Component: ngx-ueditor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestNGComponent],
-      imports: [UeditorModule]
+      imports: [UEditorModule]
     });
     TestBed.overrideComponent(TestNGComponent, {set: {template: html}});
     fixture = TestBed.createComponent(TestNGComponent);

@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Component, OnInit, ViewEncapsulation, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { UeditorComponent } from 'ngx-ueditor';
+import { UEditorComponent } from 'ngx-ueditor';
 
 @Component({
     selector: 'demo',
@@ -9,7 +9,7 @@ import { UeditorComponent } from 'ngx-ueditor';
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
-    @ViewChild('full') full: UeditorComponent;
+    @ViewChild('full') full: UEditorComponent;
     full_source: string;
 
     constructor(private el: ElementRef) {}

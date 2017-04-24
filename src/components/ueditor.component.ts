@@ -2,6 +2,7 @@ import { Component, Input, forwardRef, ViewChild, ElementRef, OnDestroy, EventEm
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { ScriptService } from './script.service';
+import { UEditorConfig } from './ueditor.config';
 
 declare const window: any;
 declare const UE: any;
@@ -17,32 +18,34 @@ export type EventTypes = 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeEx
     styles: [ `.ueditor-textarea{display:none;}` ],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => UeditorComponent),
+        useExisting: forwardRef(() => UEditorComponent),
         multi: true
     }],
 })
-export class UeditorComponent implements OnDestroy, ControlValueAccessor {
+export class UEditorComponent implements OnDestroy, ControlValueAccessor {
     private instance: any;
     private value: string;
+    private path: string;
     private events:any = {};
     
     loading: boolean = true;
 
-    @Input() path: string;
     @Input() config: any;
     @Input() loadingTip: string = '加载中...';
     @ViewChild('host') host: ElementRef;
 
-    @Output() onReady = new EventEmitter<UeditorComponent>();
+    @Output() onReady = new EventEmitter<UEditorComponent>();
     @Output() onDestroy = new EventEmitter();
     @Output() onContentChange = new EventEmitter();
 
     constructor(private el: ElementRef,
                 private zone: NgZone, 
-                private ss: ScriptService) { }
+                private ss: ScriptService,
+                private defConfig: UEditorConfig) {}
 
     ngOnInit() {
-        if (!this.path) this.path = '/assets/ueditor/';
+        this.path = this.defConfig && this.defConfig.path;
+        if (!this.path) this.path = './assets/ueditor/';
 
         // 已经存在对象无须进入懒加载模式
         if (window.UE) {
@@ -63,9 +66,11 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
         if (this.instance) return;
 
         this.zone.runOutsideAngular(() => {
-            let ueditor = new UE.ui.Editor(Object.assign({
+            const opt = Object.assign({
                 UEDITOR_HOME_URL: this.path
-            }, this.config, options));
+            }, this.defConfig && this.defConfig.options, this.config, options);
+
+            let ueditor = new UE.ui.Editor(opt);
             ueditor.render(this.host.nativeElement);
             
             ueditor.addListener('ready', () => {

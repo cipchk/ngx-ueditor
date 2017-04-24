@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { HighlightJsModule } from 'ngx-highlight-js';
 
-import { UeditorModule } from 'ngx-ueditor';
+import { UEditorModule } from 'ngx-ueditor';
 
 import { AppComponent } from './app.component';
 import { DemoComponent } from './components/demo.component';
@@ -18,7 +18,12 @@ import { DemoComponent } from './components/demo.component';
     CommonModule,
     HighlightJsModule,
     
-    UeditorModule
+    UEditorModule.forRoot({
+        path: 'assets/ueditor/',
+        options: {
+            themePath: '/assets/ueditor/themes/'
+        }
+    })
   ],
   declarations: [
     AppComponent,
