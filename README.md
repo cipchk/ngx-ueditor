@@ -42,7 +42,7 @@ export class AppModule { }
 ```html
 <ueditor [(ngModel)]="full_source" 
          [config]="{...}"
-         [path]="'./assets/ueditor/'"
+         [path]="'/assets/ueditor/'"
          [loadingTip]="'加载中……'"
          (onReady)=""
          (onDestroy)=""
@@ -52,7 +52,7 @@ export class AppModule { }
 | 名称    | 类型           | 默认值  | 描述 |
 | ------- | ------------- | ----- | ----- |
 | config | Object |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
-| path | string | ./assets/ueditor/ | ueditor代码根目录路径，以 `/` 结尾。 |
+| path | string | /assets/ueditor/ | ueditor代码根目录路径，以 `/` 结尾。 |
 | loadingTip | string | 加载中... | 初始化提示文本。 |
 | onReady | Function |  | 编辑器准备就绪后会触发该事件 |
 | onDestroy | Function |  | **编辑器组件销毁**后会触发该事件 |

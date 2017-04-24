@@ -42,7 +42,7 @@ export class UeditorComponent implements OnDestroy, ControlValueAccessor {
                 private ss: ScriptService) { }
 
     ngOnInit() {
-        if (!this.path) this.path = './assets/ueditor/';
+        if (!this.path) this.path = '/assets/ueditor/';
 
         // 已经存在对象无须进入懒加载模式
         if (window.UE) {
