@@ -13,7 +13,7 @@ declare const UE: any;
 export class DevComponent {
     constructor(private el: ElementRef) {}
 
-    custom_source: string;
+    custom_source: string = `<p>Hello ${+new Date}</p>`;
     custom: any = {
         toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold', 'button']]
     };
