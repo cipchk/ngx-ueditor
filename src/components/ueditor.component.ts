@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef, ViewChild, ElementRef, OnDestroy, EventEmitter, Output, NgZone } from '@angular/core';
+import { Component, Input, forwardRef, ViewChild, ElementRef, OnDestroy, EventEmitter, Output, NgZone, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { ScriptService } from './script.service';
@@ -15,6 +15,7 @@ export type EventTypes = 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeEx
     <textarea #host class="ueditor-textarea"></textarea>
     <p class="loading" *ngIf="loading">{{loadingTip}}</p>
     `,
+    encapsulation: ViewEncapsulation.Emulated,
     styles: [ `.ueditor-textarea{display:none;}` ],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
@@ -27,7 +28,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
     private value: string;
     private path: string;
     private events:any = {};
-    
+
     loading: boolean = true;
     id: string;
 
@@ -41,7 +42,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
     @Output() onContentChange = new EventEmitter();
 
     constructor(private el: ElementRef,
-                private zone: NgZone, 
+                private zone: NgZone,
                 private ss: ScriptService,
                 private defConfig: UEditorConfig) {}
 
@@ -93,7 +94,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
                     this.onReady.emit(this);
                 });
             })
-            
+
             ueditor.addListener('contentChange', () => {
                 this.updateValue(ueditor.getContent());
             });
@@ -106,7 +107,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
 
             this.onChange(this.value);
             this.onTouched(this.value);
-            
+
             this.onContentChange.emit(this.value);
         });
     }
@@ -126,7 +127,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
 
     /**
      * 获取UE实例
-     * 
+     *
      * @readonly
      */
     get Instance(): any {
@@ -135,8 +136,8 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
 
     /**
      * 设置编辑器语言
-     * 
-     * @param {('zh-cn' | 'en')} lang 
+     *
+     * @param {('zh-cn' | 'en')} lang
      */
     setLanguage(lang: 'zh-cn' | 'en') {
         this.ss.loadScript(`${this.path}/lang/${lang}/${lang}.js`).then(res => {
