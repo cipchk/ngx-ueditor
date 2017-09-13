@@ -1,3 +1,7 @@
+# 1.0.7
+
++ fix: `path` 路径是否带 `/` 问题。closes #6
+
 # 1.0.6
 
 + fix: remove `peerDependencies`
