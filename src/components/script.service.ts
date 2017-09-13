@@ -13,16 +13,18 @@ export class ScriptService {
     getChangeEmitter() {
         return this.emitter;
     }
-    
+
     load(path: string, debug?:boolean) {
         if (this.loaded) return this;
 
         this.loaded = true;
-        
+
         let promises: Promise<any>[] = [];
 
-        [ `${path}/ueditor.config.js`, debug === true ? `${path}/ueditor.all.js` : `${path}/ueditor.all.min.js` ].forEach((script) => promises.push(this.loadScript(script)));
-        
+        if (!path.endsWith('/')) path += '/';
+
+        [ `${path}ueditor.config.js`, debug === true ? `${path}ueditor.all.js` : `${path}ueditor.all.min.js` ].forEach((script) => promises.push(this.loadScript(script)));
+
         Promise.all(promises).then(res => {
             this.emitter.next(true);
         });
