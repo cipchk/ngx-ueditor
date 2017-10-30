@@ -24,6 +24,8 @@ export type EventTypes = 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeEx
     }],
 })
 export class UEditorComponent implements OnDestroy, ControlValueAccessor {
+    static idPool = 0;
+
     private instance: any;
     private value: string;
     private path: string;
@@ -51,7 +53,7 @@ export class UEditorComponent implements OnDestroy, ControlValueAccessor {
         if (!this.path) this.path = './assets/ueditor/';
 
         // 构建一个虚拟id
-        this.id = 'ueditor-' + new Date().getTime();
+        this.id = 'ueditor-' + ++UEditorComponent.idPool;
         this.host.nativeElement.id = this.id;
 
         // 已经存在对象无须进入懒加载模式
