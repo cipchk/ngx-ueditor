@@ -1,12 +1,12 @@
 <div class="card mb-3">
     <div class="card-header">自定义按钮</div>
-    <div class="card-block">
+    <div class="card-body">
         <p>示例只是针对当前UEditor实例，如果想所有实例都通用，可以尝试在 Module 中注册。</p>
         <div class="row">
             <div class="col-sm-6">
                 <textarea highlight-js>
-&lt;ueditor [(ngModel)]="custom_source" 
-            (onPreReady)="onPreReady($event)" 
+&lt;ueditor [(ngModel)]="custom_source"
+            (onPreReady)="onPreReady($event)"
             [config]="custom">
 &lt;/ueditor>
                 </textarea>
@@ -55,8 +55,8 @@ onPreReady(comp: UEditorComponent) {
             <div class="col-sm-6">
                 <ueditor [(ngModel)]="custom_source" (onPreReady)="onPreReady($event)" [config]="custom"></ueditor>
                 <div class="card card-outline-secondary mt-3">
-                    <div class="card-block">
-                        <blockquote class="card-blockquote" [innerHTML]="custom_source"></blockquote>
+                    <div class="card-body">
+                        <blockquote class="card-bodyquote" [innerHTML]="custom_source"></blockquote>
                     </div>
                 </div>
             </div>

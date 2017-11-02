@@ -1,3 +1,7 @@
+# 1.0.9
+
++ Support Angular5.
+
 # 1.0.8
 
 + fix: 由于随机ID可能引起重复问题。close #12

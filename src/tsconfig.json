@@ -8,7 +8,6 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "inlineSources": true,
-    "noEmitHelpers": false,
     "noImplicitAny": true,
     "declaration": true,
     "skipLibCheck": false,
@@ -29,7 +28,6 @@
   ],
   "files": [
     "../scripts/typings.d.ts",
-    "./ngx-ueditor.ts",
     "./index.ts"
   ],
   "angularCompilerOptions": {
