@@ -5,20 +5,21 @@
   },
   "apps": [
     {
-      "root": "demo/src",
-      "outDir": "demo/dist",
+      "root": "src",
+      "outDir": "dist",
       "assets": [
-        "assets"
+        "assets",
+        "favicon.ico"
       ],
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
-      "test": "../../scripts/test.ts",
-      "tsconfig": "tsconfig.json",
-      "testTsconfig": "../../src/tsconfig.spec.json",
-      "prefix": "",
-      "serviceWorker": false,
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "app",
       "styles": [
+        "styles.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -30,12 +31,26 @@
   ],
   "e2e": {
     "protractor": {
-      "config": "protractor.conf.js"
+      "config": "./protractor.conf.js"
     }
   },
+  "lint": [
+    {
+      "project": "src/tsconfig.app.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "src/tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
+    }
+  ],
   "test": {
     "karma": {
-      "config": "karma.conf.js"
+      "config": "./karma.conf.js"
     }
   },
   "defaults": {
