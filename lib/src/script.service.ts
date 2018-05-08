@@ -1,80 +1,79 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 declare const document: any;
 
 @Injectable()
 export class ScriptService {
+  private loaded = false;
+  private list: any = {};
+  private emitter: Subject<boolean> = new Subject<boolean>();
 
-    private loaded = false;
-    private list: any = {};
-    private emitter: Subject<boolean> = new Subject<boolean>();
+  getChangeEmitter() {
+    return this.emitter;
+  }
 
-    getChangeEmitter() {
-        return this.emitter;
-    }
+  load(path: string[]) {
+    if (this.loaded) return this;
 
-    load(path: string, debug?: boolean) {
-        if (this.loaded) return this;
+    this.loaded = true;
 
-        this.loaded = true;
+    const promises: Promise<any>[] = [];
 
-        const promises: Promise<any>[] = [];
+    path.forEach(script => promises.push(this.loadScript(script)));
 
-        if (!path.endsWith('/')) path += '/';
+    Promise.all(promises).then(res => {
+      this.emitter.next(true);
+    });
 
-        [ `${path}ueditor.config.js`, debug === true ? `${path}ueditor.all.js` : `${path}ueditor.all.min.js` ].forEach((script) => promises.push(this.loadScript(script)));
+    return this;
+  }
 
-        Promise.all(promises).then(res => {
-            this.emitter.next(true);
+  loadScript(path: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (this.list[path] === true) {
+        resolve(<any>{
+          path: path,
+          loaded: true,
+          status: 'Loaded',
         });
+        return;
+      }
 
-        return this;
-    }
+      this.list[path] = true;
 
-    loadScript(path: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (this.list[path] === true) {
-                resolve(<any>{
-                    path: path,
-                    loaded: true,
-                    status: 'Loaded'
-                });
-                return;
-            }
-
-            this.list[path] = true;
-
-            const node = document.createElement('script');
-            node.type = 'text/javascript';
-            node.src = path;
-            node.charset = 'utf-8';
-            if (node.readyState) { // IE
-                node.onreadystatechange = () => {
-                    if (node.readyState === 'loaded' || node.readyState === 'complete') {
-                        node.onreadystatechange = null;
-                        resolve(<any>{
-                            path: path,
-                            loaded: true,
-                            status: 'Loaded'
-                        });
-                    }
-                };
-            } else {
-                node.onload = () => {
-                    resolve(<any>{
-                        path: path,
-                        loaded: true,
-                        status: 'Loaded'
-                    });
-                };
-            }
-            node.onerror = (error: any) => resolve(<any>{
-                path: path,
-                loaded: false,
-                status: 'Loaded'
+      const node = document.createElement('script');
+      node.type = 'text/javascript';
+      node.src = path;
+      node.charset = 'utf-8';
+      if (node.readyState) {
+        // IE
+        node.onreadystatechange = () => {
+          if (node.readyState === 'loaded' || node.readyState === 'complete') {
+            node.onreadystatechange = null;
+            resolve(<any>{
+              path: path,
+              loaded: true,
+              status: 'Loaded',
             });
-            document.getElementsByTagName('head')[0].appendChild(node);
+          }
+        };
+      } else {
+        node.onload = () => {
+          resolve(<any>{
+            path: path,
+            loaded: true,
+            status: 'Loaded',
+          });
+        };
+      }
+      node.onerror = (error: any) =>
+        resolve(<any>{
+          path: path,
+          loaded: false,
+          status: 'Loaded',
         });
-    }
+      document.getElementsByTagName('head')[0].appendChild(node);
+    });
+  }
 }

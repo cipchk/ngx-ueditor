@@ -4,7 +4,6 @@ Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor
 [![NPM version](https://img.shields.io/npm/v/ngx-ueditor.svg)](https://www.npmjs.com/package/ngx-ueditor)
 [![Build Status](https://travis-ci.org/cipchk/ngx-ueditor.svg?branch=master)](https://travis-ci.org/cipchk/ngx-ueditor)
 
-
 ## Demo
 
 [Live Demo](https://cipchk.github.io/ngx-ueditor/)
@@ -31,19 +30,21 @@ npm install ngx-ueditor --save
 import { UEditorModule } from 'ngx-ueditor';
 
 @NgModule({
-    imports: [ 
-        BrowserModule,
-        UEditorModule.forRoot({
-            // 指定ueditor.js路径目录
-            path: 'assets/ueditor/',
-            // 默认全局配置项
-            options: {
-                themePath: '/assets/ueditor/themes/'
-            }
-        })
-    ],
-    declarations: [AppComponent],
-    bootstrap: [AppComponent]
+  imports: [ 
+    BrowserModule,
+    UEditorModule.forRoot({
+      js: [
+        `./assets/ueditor/ueditor.all.min.js`,
+        `./assets/ueditor/ueditor.config.js`,
+      ],
+      // 默认前端配置项
+      options: {
+        UEDITOR_HOME_URL: './assets/ueditor/'
+      }
+    })
+  ],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
 ```
@@ -88,13 +89,13 @@ export class AppModule { }
 
 ```typescript
 export class DemoComponent {
-    @ViewChild('full') full: UEditorComponent;
-    constructor(private el: ElementRef) {}
+  @ViewChild('full') full: UEditorComponent;
+  constructor(private el: ElementRef) {}
 
-    getAllHtml() {
-        // 通过 `this.full.Instance` 访问ueditor实例对象
-        alert(this.full.Instance.getAllHtml())
-    }
+  getAllHtml() {
+    // 通过 `this.full.Instance` 访问ueditor实例对象
+    alert(this.full.Instance.getAllHtml())
+  }
 }
 ```
 
@@ -105,7 +106,7 @@ export class DemoComponent {
 ```typescript
 // 事件监听
 this.full.addListener('focus', () => {
-    this.focus = `fire focus in ${new Date().getTime()}`;
+  this.focus = `fire focus in ${new Date().getTime()}`;
 });
 // 事件移除
 this.full.removeListener('focus');
@@ -123,42 +124,42 @@ this.full.removeListener('focus');
 
 ```typescript
 onPreReady(comp: UEditorComponent) {
-    UE.registerUI('button', function(editor, uiName) {
-        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-        editor.registerCommand(uiName, {
-            execCommand: function() {
-                alert('execCommand:' + uiName)
-            }
-        });
-        //创建一个button
-        var btn = new UE.ui.Button({
-            //按钮的名字
-            name: uiName,
-            //提示
-            title: uiName,
-            //添加额外样式，指定icon图标，这里默认使用一个重复的icon
-            cssRules: 'background-position: -500px 0;',
-            //点击时执行的命令
-            onclick: function() {
-                //这里可以不用执行命令,做你自己的操作也可
-                editor.execCommand(uiName);
-            }
-        });
-        //当点到编辑内容上时，按钮要做的状态反射
-        editor.addListener('selectionchange', function() {
-            var state = editor.queryCommandState(uiName);
-            if (state == -1) {
-                btn.setDisabled(true);
-                btn.setChecked(false);
-            } else {
-                btn.setDisabled(false);
-                btn.setChecked(state);
-            }
-        });
-        //因为你是添加button,所以需要返回这个button
-        return btn;
-    }, 5, comp.id);
-    // comp.id 是指当前UEditor实例Id
+  UE.registerUI('button', function(editor, uiName) {
+    //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+    editor.registerCommand(uiName, {
+      execCommand: function() {
+        alert('execCommand:' + uiName)
+      }
+    });
+    //创建一个button
+    var btn = new UE.ui.Button({
+      //按钮的名字
+      name: uiName,
+      //提示
+      title: uiName,
+      //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+      cssRules: 'background-position: -500px 0;',
+      //点击时执行的命令
+      onclick: function() {
+        //这里可以不用执行命令,做你自己的操作也可
+        editor.execCommand(uiName);
+      }
+    });
+    //当点到编辑内容上时，按钮要做的状态反射
+    editor.addListener('selectionchange', function() {
+      var state = editor.queryCommandState(uiName);
+      if (state == -1) {
+        btn.setDisabled(true);
+        btn.setChecked(false);
+      } else {
+        btn.setDisabled(false);
+        btn.setChecked(state);
+      }
+    });
+    //因为你是添加button,所以需要返回这个button
+    return btn;
+  }, 5, comp.id);
+  // comp.id 是指当前UEditor实例Id
 }
 
 ```
@@ -169,52 +170,54 @@ hook调用会在UE加载完成后，UEditor初始化前调用，而且这个整�
 
 ```typescript
 UEditorModule.forRoot({
-    path: 'assets/ueditor/',
+    js: [
+      `./assets/ueditor/ueditor.all.min.js`,
+      `./assets/ueditor/ueditor.config.js`,
+    ],
+    // 默认前端配置项
     options: {
-        themePath: '/assets/ueditor/themes/'
+      UEDITOR_HOME_URL: './assets/ueditor/'
     },
     hook: (UE: any): void => {
-        // button 自定义按钮将在所有实例中有效。
-        UE.registerUI('button', function(editor, uiName) {
-            //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-            editor.registerCommand(uiName, {
-                execCommand: function() {
-                    alert('execCommand:' + uiName)
-                }
-            });
-            //创建一个button
-            var btn = new UE.ui.Button({
-                //按钮的名字
-                name: uiName,
-                //提示
-                title: uiName,
-                //添加额外样式，指定icon图标，这里默认使用一个重复的icon
-                cssRules: 'background-position: -500px 0;',
-                //点击时执行的命令
-                onclick: function() {
-                    //这里可以不用执行命令,做你自己的操作也可
-                    editor.execCommand(uiName);
-                }
-            });
-            //当点到编辑内容上时，按钮要做的状态反射
-            editor.addListener('selectionchange', function() {
-                var state = editor.queryCommandState(uiName);
-                if (state == -1) {
-                    btn.setDisabled(true);
-                    btn.setChecked(false);
-                } else {
-                    btn.setDisabled(false);
-                    btn.setChecked(state);
-                }
-            });
-            //因为你是添加button,所以需要返回这个button
-            return btn;
+      // button 自定义按钮将在所有实例中有效。
+      UE.registerUI('button', function(editor, uiName) {
+        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+        editor.registerCommand(uiName, {
+          execCommand: function() {
+            alert('execCommand:' + uiName)
+          }
         });
+        //创建一个button
+        var btn = new UE.ui.Button({
+          //按钮的名字
+          name: uiName,
+          //提示
+          title: uiName,
+          //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+          cssRules: 'background-position: -500px 0;',
+          //点击时执行的命令
+          onclick: function() {
+            //这里可以不用执行命令,做你自己的操作也可
+            editor.execCommand(uiName);
+          }
+        });
+        //当点到编辑内容上时，按钮要做的状态反射
+        editor.addListener('selectionchange', function() {
+          var state = editor.queryCommandState(uiName);
+          if (state == -1) {
+            btn.setDisabled(true);
+            btn.setChecked(false);
+          } else {
+            btn.setDisabled(false);
+            btn.setChecked(state);
+          }
+        });
+        //因为你是添加button,所以需要返回这个button
+        return btn;
+      });
     }
 })
-
 ```
-
 
 ## 表单非空校验
 
@@ -224,32 +227,32 @@ UEditorModule.forRoot({
 
 ```typescript
 interface UEditorComponent {
-    /**
-     * 获取UE实例
-     * 
-     * @readonly
-     */
-    get Instance(): any;
+  /**
+   * 获取UE实例
+   * 
+   * @readonly
+   */
+  get Instance(): any;
 
-        /**
-     * 设置编辑器语言
-     * 
-     * @param {('zh-cn' | 'en')} lang 
-     */
-    setLanguage(lang: 'zh-cn' | 'en') {}
+      /**
+   * 设置编辑器语言
+   * 
+   * @param {('zh-cn' | 'en')} lang 
+   */
+  setLanguage(lang: 'zh-cn' | 'en') {}
 
-    /**
-     * 添加编辑器事件
-     */
-    addListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange', 
-                fn: Function): void {}
+  /**
+   * 添加编辑器事件
+   */
+  addListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange', 
+              fn: Function): void {}
 
-    /**
-     * 移除编辑器事件
-     * 
-     * @param {('destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange')} eventName 
-     */
-    removeListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange'): void {}
+  /**
+   * 移除编辑器事件
+   * 
+   * @param {('destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange')} eventName 
+   */
+  removeListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange'): void {}
 }
 ```
 

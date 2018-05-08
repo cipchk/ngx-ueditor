@@ -1,8 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-root',
-    template: `
+  selector: 'app-root',
+  template: `
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" routerLink="/">ngx-ueditor</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,8 +21,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
     </nav>
     <p class="mt-3 mb-3">Angular2 百度UEditor组件，有关更多细节见<a href="https://github.com/cipchk/ngx-ueditor/blob/master/README.md" target="_blank">README.md</a></p>
     <router-outlet></router-outlet>
-  `,
-    encapsulation: ViewEncapsulation.None
+  `
 })
-export class AppComponent {
-}
+export class AppComponent {}

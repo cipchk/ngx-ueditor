@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UEditorModule } from '../index';
+import { UEditorModule } from '../ngx-ueditor.module';
 
 const html = ``;
 
@@ -14,9 +14,9 @@ describe('Component: ngx-ueditor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestNGComponent],
-      imports: [UEditorModule]
+      imports: [UEditorModule],
     });
-    TestBed.overrideComponent(TestNGComponent, {set: {template: html}});
+    TestBed.overrideComponent(TestNGComponent, { set: { template: html } });
     fixture = TestBed.createComponent(TestNGComponent);
     context = fixture.componentInstance;
     element = fixture.nativeElement.querySelector('#c1');
@@ -31,7 +31,6 @@ describe('Component: ngx-ueditor', () => {
 
 @Component({
   selector: 'app-ueditor-test',
-  template: ''
+  template: '',
 })
-class TestNGComponent {
-}
+class TestNGComponent {}

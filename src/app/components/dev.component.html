@@ -1,17 +1,15 @@
 <div class="card mb-3">
-    <div class="card-header">自定义按钮</div>
-    <div class="card-body">
-        <p>示例只是针对当前UEditor实例，如果想所有实例都通用，可以尝试在 Module 中注册。</p>
-        <div class="row">
-            <div class="col-sm-6">
-                <textarea highlight-js>
+  <div class="card-header">自定义按钮</div>
+  <div class="card-body">
+    <p>示例只是针对当前UEditor实例，如果想所有实例都通用，可以尝试在 Module 中注册。</p>
+    <div class="row">
+      <div class="col-sm-6">
+        <textarea highlight-js>
 &lt;ueditor [(ngModel)]="custom_source"
             (onPreReady)="onPreReady($event)"
             [config]="custom">
-&lt;/ueditor>
-                </textarea>
-                <textarea highlight-js>
-
+&lt;/ueditor></textarea>
+        <textarea highlight-js>
 onPreReady(comp: UEditorComponent) {
     UE.registerUI('button', function(editor, uiName) {
         //注册按钮执行时的command命令，使用命令默认就会带有回退操作
@@ -51,15 +49,15 @@ onPreReady(comp: UEditorComponent) {
     // comp.id 是指当前UEditor实例Id
 }
                 </textarea>
-            </div>
-            <div class="col-sm-6">
-                <ueditor [(ngModel)]="custom_source" (onPreReady)="onPreReady($event)" [config]="custom"></ueditor>
-                <div class="card card-outline-secondary mt-3">
-                    <div class="card-body">
-                        <blockquote class="card-bodyquote" [innerHTML]="custom_source"></blockquote>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="col-sm-6">
+        <ueditor [(ngModel)]="custom_source" (onPreReady)="onPreReady($event)" [config]="custom"></ueditor>
+        <div class="card card-outline-secondary mt-3">
+          <div class="card-body">
+            <blockquote class="card-bodyquote" [innerHTML]="custom_source"></blockquote>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
