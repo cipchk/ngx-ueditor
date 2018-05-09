@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   forwardRef,
-  ViewChild,
   ElementRef,
   OnDestroy,
   EventEmitter,
@@ -14,6 +13,7 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
+  NgZone,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
@@ -23,6 +23,12 @@ import { UEditorConfig } from './ueditor.config';
 declare const window: any;
 declare const UE: any;
 let _hook_finished = false;
+
+export const UEDITOR_CONTROL_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => UEditorComponent),
+  multi: true
+};
 
 export type EventTypes =
   | 'destroy'
@@ -44,17 +50,12 @@ export type EventTypes =
 @Component({
   selector: 'ueditor',
   template: `
-    <textarea #host id="{{id}}" class="ueditor-textarea"></textarea>
-    <div class="loading" *ngIf="loading" [innerHTML]="loadingTip"></div>
-    `,
-  styles: [`:host .ueditor-textarea{display:none;}`],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UEditorComponent),
-      multi: true,
-    },
-  ],
+  <textarea id="{{id}}" class="ueditor-textarea"></textarea>
+  <div *ngIf="loading" class="loading" [innerHTML]="loadingTip"></div>
+  `,
+  preserveWhitespaces: false,
+  styles: [`:host {line-height: initial;} :host .ueditor-textarea{display:none;}`],
+  providers: [UEDITOR_CONTROL_VALUE_ACCESSOR],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UEditorComponent
@@ -64,25 +65,31 @@ export class UEditorComponent
   private inited = false;
   private events: any = {};
 
+  private onChange: (value: string) => void;
+  private onTouched: () => void;
+
   loading = true;
-  id = `_ueditor-${Math.random()
-    .toString(36)
-    .substring(2)}`;
+  id = `_ueditor-${Math.random().toString(36).substring(2)}`;
 
   @Input() config: any;
   @Input() loadingTip = '加载中...';
-  @ViewChild('host') host: ElementRef;
+  @Input()
+  set disabled(value: boolean) {
+    this._disabled = value;
+    this.setDisabled();
+  }
+  private _disabled = false;
 
-  @Output() onPreReady = new EventEmitter<UEditorComponent>();
-  @Output() onReady = new EventEmitter<UEditorComponent>();
-  @Output() onDestroy = new EventEmitter();
-  @Output() onContentChange = new EventEmitter();
+  @Output() readonly onPreReady = new EventEmitter<UEditorComponent>();
+  @Output() readonly onReady = new EventEmitter<UEditorComponent>();
+  @Output() readonly onDestroy = new EventEmitter();
 
   constructor(
     private el: ElementRef,
     private ss: ScriptService,
     private cog: UEditorConfig,
     private cd: ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -136,10 +143,7 @@ export class UEditorComponent
     ueditor.addListener('contentChange', () => {
       this.value = ueditor.getContent();
 
-      this.onChange(this.value);
-      this.onTouched(this.value);
-
-      this.onContentChange.emit(this.value);
+      this.zone.run(() => this.onChange(this.value));
     });
     this.loading = false;
     this.cd.detectChanges();
@@ -158,6 +162,15 @@ export class UEditorComponent
     this.onDestroy.emit();
   }
 
+  private setDisabled() {
+    if (!this.instance) return ;
+    if (this._disabled) {
+      this.instance.setDisabled();
+    } else {
+      this.instance.setEnabled();
+    }
+  }
+
   /**
    * 获取UE实例
    *
@@ -169,8 +182,6 @@ export class UEditorComponent
 
   /**
    * 设置编辑器语言
-   *
-   * @param {('zh-cn' | 'en')} lang
    */
   setLanguage(lang: 'zh-cn' | 'en') {
     this.ss
@@ -226,21 +237,15 @@ export class UEditorComponent
     }
   }
 
-  protected onChange: any = Function.prototype;
-  protected onTouched: any = Function.prototype;
-
-  public registerOnChange(fn: (_: any) => {}): void {
+  registerOnChange(fn: (_: any) => {}): void {
     this.onChange = fn;
   }
-  public registerOnTouched(fn: () => {}): void {
+  registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.instance.setDisabled();
-    } else {
-      this.instance.setEnabled();
-    }
+    this.disabled = isDisabled;
+    this.setDisabled();
   }
 }
