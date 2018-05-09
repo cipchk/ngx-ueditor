@@ -1,6 +1,6 @@
 {
   "name": "ngx-ueditor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "./bundles/ueditor.umd.js",
   "module": "./esm5/ueditor.js",
   "es2015": "./esm2015/ueditor.js",
