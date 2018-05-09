@@ -1,9 +1,8 @@
-import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { UEditorModule } from 'ngx-ueditor';
@@ -16,7 +15,6 @@ import { DevComponent } from './components/dev.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
     RouterModule.forRoot(
       [
         { path: '', component: DemoComponent },

@@ -64,6 +64,7 @@ export class AppModule { }
 | ------- | ------------- | ----- | ----- |
 | config | Object |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
 | loadingTip | string | 加载中... | 初始化提示文本。 |
+| disabled | boolean | `false` | 是否禁用 |
 | onPreReady | Function |  | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
 | onReady | Function |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
 | onDestroy | Function |  | **编辑器组件销毁**后会触发该事件 |
