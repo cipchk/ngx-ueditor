@@ -256,6 +256,14 @@ interface UEditorComponent {
 }
 ```
 
+
+
+## 关于图片上传
+
+UEditor 自带单图、多图上传，只需要配置 `options.serverUrl` 服务端路径即可，有关更多上传细节 [百度：Ueditor](https://www.baidu.com/s?wd=ueditor+%E4%B8%8A%E4%BC%A0)。
+
+> 若自身已经系统包含类似_淘宝图片_统一图片管理可以自行通过二次开发图片资源选取按钮。
+
 ## Troubleshooting
 
 Please follow this guidelines when reporting bugs and feature requests:
