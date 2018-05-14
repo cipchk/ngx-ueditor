@@ -57,18 +57,18 @@ export class AppModule { }
          [loadingTip]="'加载中……'"
          (onReady)=""
          (onDestroy)=""
-         (onContentChange)=""></ueditor>
+         (ngModelChange)=""></ueditor>
 ```
 
 | 名称    | 类型           | 默认值  | 描述 |
 | ------- | ------------- | ----- | ----- |
-| config | Object |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
-| loadingTip | string | 加载中... | 初始化提示文本。 |
-| disabled | boolean | `false` | 是否禁用 |
-| onPreReady | Function |  | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
-| onReady | Function |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
-| onDestroy | Function |  | **编辑器组件销毁**后会触发该事件 |
-| onContentChange | Function |  | 编辑器内容发生改变时会触发该事件 |
+| config | `Object` |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
+| loadingTip | `string` | 加载中... | 初始化提示文本。 |
+| disabled | `boolean` | `false` | 是否禁用 |
+| onPreReady | `EventEmitter<UEditorComponent>` |  | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
+| onReady | `EventEmitter<UEditorComponent>` |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
+| onDestroy | `EventEmitter` |  | **编辑器组件销毁**后会触发该事件 |
+| ngModelChange | `EventEmitter<string>` |  | 编辑器内容发生改变时会触发该事件 |
 
 ### 3、关于懒加载
 
