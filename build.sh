@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+set -u -e -o pipefail
+
 readonly currentDir=$(cd $(dirname $0); pwd)
 cd ${currentDir}
+
 rm -rf publish
 rm -rf __gen_lib
 rm -rf publish-es2015
