@@ -52,23 +52,24 @@ export class AppModule { }
 ### 2、使用
 
 ```html
-<ueditor [(ngModel)]="full_source" 
-         [config]="{...}"
+<ueditor [(ngModel)]="html" 
+         [config]="{ wordCount: true }"
          [loadingTip]="'加载中……'"
-         (onReady)=""
-         (onDestroy)=""
-         (ngModelChange)=""></ueditor>
+         (onReady)="_ready($event)"
+         (onDestroy)="_destroy()"
+         (ngModelChange)="_change($event)"></ueditor>
 ```
 
 | 名称    | 类型           | 默认值  | 描述 |
 | ------- | ------------- | ----- | ----- |
-| config | `Object` |  | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
-| loadingTip | `string` | 加载中... | 初始化提示文本。 |
+| config | `Object` | - | 前端配置项说明，[见官网](http://fex.baidu.com/ueditor/#start-config) |
+| loadingTip | `string` | `加载中...` | 初始化提示文本 |
 | disabled | `boolean` | `false` | 是否禁用 |
-| onPreReady | `EventEmitter<UEditorComponent>` |  | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
-| onReady | `EventEmitter<UEditorComponent>` |  | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
-| onDestroy | `EventEmitter` |  | **编辑器组件销毁**后会触发该事件 |
-| ngModelChange | `EventEmitter<string>` |  | 编辑器内容发生改变时会触发该事件 |
+| delay | `number` | `50` | 延迟初始化UEditor，单位：毫秒 |
+| onPreReady | `EventEmitter<UEditorComponent>` | - | 编辑器准备就绪之前会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作（比如：二次开发前的准备）。 |
+| onReady | `EventEmitter<UEditorComponent>` | - | 编辑器准备就绪后会触发该事件，并会传递 `UEditorComponent` 当前实例对象，可用于后续操作。 |
+| onDestroy | `EventEmitter` | - | **编辑器组件销毁**后会触发该事件 |
+| ngModelChange | `EventEmitter<string>` | - | 编辑器内容发生改变时会触发该事件 |
 
 ### 3、关于懒加载
 
@@ -224,42 +225,13 @@ UEditorModule.forRoot({
 
 组件加入 `required` 当编辑器为空时会处于 `ng-invalid` 状态，具体体验见[Live Demo](https://cipchk.github.io/ngx-ueditor/)。
 
-## 组件接口
+## 常见问题
 
-```typescript
-interface UEditorComponent {
-  /**
-   * 获取UE实例
-   * 
-   * @readonly
-   */
-  get Instance(): any;
+### Cannot read property 'getDom' of undefined
 
-      /**
-   * 设置编辑器语言
-   * 
-   * @param {('zh-cn' | 'en')} lang 
-   */
-  setLanguage(lang: 'zh-cn' | 'en') {}
+当你快速切换路由时，可能会引起：`Cannot read property 'getDom' of undefined` 异常，这是因为 UEditor 在初始化过程中是异步行为，当 Angular 组件被销毁后其 DOM 也一并被移除，这可能导致进行初始化中的 UEditor 无法找到相应 DOM。我们无法避免这种错误，可以使用 `delay` 延迟启动初始化 Ueditor 适当地减少这种快速切换路由的问题。
 
-  /**
-   * 添加编辑器事件
-   */
-  addListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange', 
-              fn: Function): void {}
-
-  /**
-   * 移除编辑器事件
-   * 
-   * @param {('destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange')} eventName 
-   */
-  removeListener(eventName: 'destroy' | 'reset' | 'focus' | 'langReady' | 'beforeExecCommand' | 'afterExecCommand' | 'firstBeforeExecCommand' | 'beforeGetContent' | 'afterGetContent' | 'getAllHtml' | 'beforeSetContent' | 'afterSetContent' | 'selectionchange' | 'beforeSelectionChange' | 'afterSelectionChange'): void {}
-}
-```
-
-
-
-## 关于图片上传
+### 关于图片上传
 
 UEditor 自带单图、多图上传，只需要配置 `options.serverUrl` 服务端路径即可，有关更多上传细节 [百度：Ueditor](https://www.baidu.com/s?wd=ueditor+%E4%B8%8A%E4%BC%A0)。
 

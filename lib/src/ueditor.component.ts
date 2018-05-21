@@ -48,12 +48,16 @@ export type EventTypes =
   <div *ngIf="loading" class="loading" [innerHTML]="loadingTip"></div>
   `,
   preserveWhitespaces: false,
-  styles: [`:host {line-height: initial;} :host .ueditor-textarea{display:none;}`],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => UEditorComponent),
-    multi: true
-  }],
+  styles: [
+    `:host {line-height: initial;} :host .ueditor-textarea{display:none;}`,
+  ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => UEditorComponent),
+      multi: true,
+    },
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UEditorComponent
@@ -67,7 +71,9 @@ export class UEditorComponent
   private onTouched: () => void;
 
   loading = true;
-  id = `_ueditor-${Math.random().toString(36).substring(2)}`;
+  id = `_ueditor-${Math.random()
+    .toString(36)
+    .substring(2)}`;
 
   @Input() config: any;
   @Input() loadingTip = '加载中...';
@@ -78,6 +84,9 @@ export class UEditorComponent
   }
   private _disabled = false;
 
+  /** 延迟初始化 */
+  @Input() delay = 50;
+
   @Output() readonly onPreReady = new EventEmitter<UEditorComponent>();
   @Output() readonly onReady = new EventEmitter<UEditorComponent>();
   @Output() readonly onDestroy = new EventEmitter();
@@ -87,7 +96,7 @@ export class UEditorComponent
     private ss: ScriptService,
     private cog: UEditorConfig,
     private cd: ChangeDetectorRef,
-    private zone: NgZone
+    private zone: NgZone,
   ) {}
 
   ngOnInit() {
@@ -97,7 +106,7 @@ export class UEditorComponent
   ngAfterViewInit(): void {
     // 已经存在对象无须进入懒加载模式
     if (window.UE) {
-      this.init();
+      this.initDelay();
       return;
     }
 
@@ -105,18 +114,22 @@ export class UEditorComponent
       .load(this.cog.js)
       .getChangeEmitter()
       .subscribe(res => {
-        this.init();
+        this.initDelay();
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.inited && changes.config) {
       this.destroy();
-      this.init();
+      this.initDelay();
     }
   }
 
-  private init(options?: any) {
+  private initDelay() {
+    setTimeout(() => this.init(), this.delay);
+  }
+
+  private init() {
     if (!window.UE) throw new Error('uedito js文件加载失败');
 
     if (this.instance) return;
@@ -129,19 +142,21 @@ export class UEditorComponent
 
     this.onPreReady.emit(this);
 
-    const opt = Object.assign({}, this.cog.options, this.config, options);
+    const opt = Object.assign({}, this.cog.options, this.config);
 
-    const ueditor = UE.getEditor(this.id, opt);
-    ueditor.ready(() => {
-      this.instance = ueditor;
-      if (this.value) this.instance.setContent(this.value);
-      this.onReady.emit(this);
-    });
+    this.zone.runOutsideAngular(() => {
+      const ueditor = UE.getEditor(this.id, opt);
+      ueditor.ready(() => {
+        this.instance = ueditor;
+        if (this.value) this.instance.setContent(this.value);
+        this.onReady.emit(this);
+      });
 
-    ueditor.addListener('contentChange', () => {
-      this.value = ueditor.getContent();
+      ueditor.addListener('contentChange', () => {
+        this.value = ueditor.getContent();
 
-      this.zone.run(() => this.onChange(this.value));
+        this.zone.run(() => this.onChange(this.value));
+      });
     });
     this.loading = false;
     this.cd.detectChanges();
@@ -149,19 +164,21 @@ export class UEditorComponent
 
   private destroy() {
     if (this.instance) {
-      for (const ki of this.events) {
-        this.instance.removeListener(ki, this.events[ki]);
-      }
-      this.instance.removeListener('ready');
-      this.instance.removeListener('contentChange');
-      this.instance.destroy();
-      this.instance = null;
+      this.zone.runOutsideAngular(() => {
+        for (const ki of this.events) {
+          this.instance.removeListener(ki, this.events[ki]);
+        }
+        this.instance.removeListener('ready');
+        this.instance.removeListener('contentChange');
+        this.instance.destroy();
+        this.instance = null;
+      });
     }
     this.onDestroy.emit();
   }
 
   private setDisabled() {
-    if (!this.instance) return ;
+    if (!this.instance) return;
     if (this._disabled) {
       this.instance.setDisabled();
     } else {
@@ -196,7 +213,7 @@ export class UEditorComponent
         UE.I18N = {};
         UE.I18N[lang] = UE._bak_I18N[lang];
 
-        this.init();
+        this.initDelay();
       });
   }
 
@@ -225,7 +242,7 @@ export class UEditorComponent
   // reuse-tab: http://ng-alain.com/components/reuse-tab#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F
   _onReuseInit() {
     this.destroy();
-    this.init();
+    this.initDelay();
   }
 
   writeValue(value: string): void {
