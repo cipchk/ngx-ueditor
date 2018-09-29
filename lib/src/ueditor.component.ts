@@ -2,12 +2,10 @@ import {
   Component,
   Input,
   forwardRef,
-  ElementRef,
   OnDestroy,
   EventEmitter,
   Output,
   OnInit,
-  Optional,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   AfterViewInit,
@@ -49,7 +47,14 @@ export type EventTypes =
   `,
   preserveWhitespaces: false,
   styles: [
-    `:host {line-height: initial;} :host .ueditor-textarea{display:none;}`,
+    `
+      :host {
+        line-height: initial;
+      }
+      :host .ueditor-textarea {
+        display: none;
+      }
+    `,
   ],
   providers: [
     {
@@ -75,8 +80,10 @@ export class UEditorComponent
     .toString(36)
     .substring(2)}`;
 
-  @Input() config: any;
-  @Input() loadingTip = '加载中...';
+  @Input()
+  config: any;
+  @Input()
+  loadingTip = '加载中...';
   @Input()
   set disabled(value: boolean) {
     this._disabled = value;
@@ -85,14 +92,17 @@ export class UEditorComponent
   private _disabled = false;
 
   /** 延迟初始化 */
-  @Input() delay = 50;
+  @Input()
+  delay = 50;
 
-  @Output() readonly onPreReady = new EventEmitter<UEditorComponent>();
-  @Output() readonly onReady = new EventEmitter<UEditorComponent>();
-  @Output() readonly onDestroy = new EventEmitter();
+  @Output()
+  readonly onPreReady = new EventEmitter<UEditorComponent>();
+  @Output()
+  readonly onReady = new EventEmitter<UEditorComponent>();
+  @Output()
+  readonly onDestroy = new EventEmitter();
 
   constructor(
-    private el: ElementRef,
     private ss: ScriptService,
     private cog: UEditorConfig,
     private cd: ChangeDetectorRef,

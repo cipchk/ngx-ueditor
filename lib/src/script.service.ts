@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
-
-declare const document: any;
 
 @Injectable()
 export class ScriptService {
   private loaded = false;
   private list: any = {};
   private emitter: Subject<boolean> = new Subject<boolean>();
+
+  constructor(@Inject(DOCUMENT) private doc: any) {}
 
   getChangeEmitter() {
     return this.emitter;
@@ -22,9 +23,7 @@ export class ScriptService {
 
     path.forEach(script => promises.push(this.loadScript(script)));
 
-    Promise.all(promises).then(res => {
-      this.emitter.next(true);
-    });
+    Promise.all(promises).then(() => this.emitter.next(true));
 
     return this;
   }
@@ -42,7 +41,7 @@ export class ScriptService {
 
       this.list[path] = true;
 
-      const node = document.createElement('script');
+      const node = this.doc.createElement('script');
       node.type = 'text/javascript';
       node.src = path;
       node.charset = 'utf-8';
@@ -67,13 +66,13 @@ export class ScriptService {
           });
         };
       }
-      node.onerror = (error: any) =>
+      node.onerror = () =>
         resolve(<any>{
           path: path,
           loaded: false,
           status: 'Loaded',
         });
-      document.getElementsByTagName('head')[0].appendChild(node);
+      this.doc.getElementsByTagName('head')[0].appendChild(node);
     });
   }
 }

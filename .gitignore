@@ -4,13 +4,11 @@
 /dist
 /tmp
 /out-tsc
-/__gen_lib
-/publish-es5
-/publish-es2015
 /publish
 
 # dependencies
 /node_modules
+/yarn.lock
 
 # IDEs and editors
 /.idea

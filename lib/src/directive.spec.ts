@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UEditorModule } from '../ngx-ueditor.module';
+import { UEditorModule } from './ueditor.module';
 
 const html = ``;
 
