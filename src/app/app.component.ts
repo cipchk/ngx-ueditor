@@ -16,6 +16,9 @@ import { Component } from '@angular/core';
             <li class="nav-item">
                 <a class="nav-link" routerLink="/dev">二次开发</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/modal">模态框</a>
+            </li>
           </ul>
         </div>
     </nav>

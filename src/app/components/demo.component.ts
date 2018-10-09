@@ -1,21 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { UEditorComponent } from 'ngx-ueditor';
-
-declare const UE: any;
 
 @Component({
   selector: 'demo',
-  templateUrl: './demo.component.html'
+  templateUrl: './demo.component.html',
 })
 export class DemoComponent {
-  @ViewChild('full') full: UEditorComponent;
+  @ViewChild('full')
+  full: UEditorComponent;
   full_source: string;
 
   constructor(private el: ElementRef) {}
@@ -46,7 +38,9 @@ export class DemoComponent {
 
   setContent(isAppendTo: boolean) {
     const arr = [];
-    arr.push(`使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容`);
+    arr.push(
+      `使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容`,
+    );
     this.full.Instance.setContent('欢迎使用ueditor', isAppendTo);
     alert(arr.join('\n'));
   }

@@ -6,10 +6,15 @@ import { RouterModule } from '@angular/router';
 
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { UEditorModule } from 'ngx-ueditor';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppComponent } from './app.component';
 import { DemoComponent } from './components/demo.component';
 import { DevComponent } from './components/dev.component';
+import {
+  DemoModalComponent,
+  DemoModalContentComponent,
+} from './components/modal.component';
 
 @NgModule({
   imports: [
@@ -19,11 +24,13 @@ import { DevComponent } from './components/dev.component';
       [
         { path: '', component: DemoComponent },
         { path: 'dev', component: DevComponent },
+        { path: 'modal', component: DemoModalComponent },
       ],
       { useHash: true },
     ),
     CommonModule,
     HighlightJsModule,
+    ModalModule.forRoot(),
 
     UEditorModule.forRoot({
       js: [
@@ -31,11 +38,21 @@ import { DevComponent } from './components/dev.component';
         `./assets/ueditor/ueditor.config.js`,
       ],
       options: {
-        UEDITOR_HOME_URL: (location.href.indexOf('github') !== -1 ? '/ngx-ueditor' : '.') + '/assets/ueditor/',
+        zIndex: 5000,
+        UEDITOR_HOME_URL:
+          (location.href.indexOf('github') !== -1 ? '/ngx-ueditor' : '.') +
+          '/assets/ueditor/',
       },
     }),
   ],
-  declarations: [AppComponent, DemoComponent, DevComponent],
+  declarations: [
+    AppComponent,
+    DemoComponent,
+    DevComponent,
+    DemoModalComponent,
+    DemoModalContentComponent,
+  ],
+  entryComponents: [DemoModalContentComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

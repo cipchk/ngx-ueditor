@@ -6,7 +6,8 @@ Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor
 
 ## Demo
 
-[Live Demo](https://cipchk.github.io/ngx-ueditor/)
+- [Live Demo](https://cipchk.github.io/ngx-ueditor/)
+- [Stackblitz](https://stackblitz.com/edit/ngx-ueditor)
 
 ## 特性
 
