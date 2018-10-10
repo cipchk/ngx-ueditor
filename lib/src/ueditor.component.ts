@@ -175,9 +175,9 @@ export class UEditorComponent
   private destroy() {
     if (this.instance) {
       this.zone.runOutsideAngular(() => {
-        for (const ki of this.events) {
-          this.instance.removeListener(ki, this.events[ki]);
-        }
+        Object.keys(this.events).forEach(name =>
+          this.instance.removeListener(name, this.events[name]),
+        );
         this.instance.removeListener('ready');
         this.instance.removeListener('contentChange');
         this.instance.destroy();
