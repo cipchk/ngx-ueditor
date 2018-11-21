@@ -177,8 +177,8 @@ hook调用会在UE加载完成后，UEditor初始化前调用，而且这个整�
 ```typescript
 UEditorModule.forRoot({
     js: [
-      `./assets/ueditor/ueditor.all.min.js`,
       `./assets/ueditor/ueditor.config.js`,
+      `./assets/ueditor/ueditor.all.min.js`,
     ],
     // 默认前端配置项
     options: {
