@@ -34,8 +34,8 @@ import {
 
     UEditorModule.forRoot({
       js: [
-        `./assets/ueditor/ueditor.all.min.js`,
         `./assets/ueditor/ueditor.config.js`,
+        `./assets/ueditor/ueditor.all.min.js`,
       ],
       options: {
         zIndex: 5000,
