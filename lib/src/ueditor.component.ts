@@ -72,8 +72,8 @@ export class UEditorComponent
   private inited = false;
   private events: any = {};
 
-  private onChange: (value: string) => void;
-  private onTouched: () => void;
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
   loading = true;
   id = `_ueditor-${Math.random()
