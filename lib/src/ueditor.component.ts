@@ -1,3 +1,4 @@
+// tslint:disable: no-output-on-prefix no-redundant-jsdoc
 import {
   Component,
   Input,
@@ -12,14 +13,16 @@ import {
   OnChanges,
   SimpleChanges,
   NgZone,
+  Inject,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-
+import { InputNumber } from '@ng-util/util';
 import { ScriptService } from './script.service';
 import { UEditorConfig } from './ueditor.config';
+import { NuLazyService } from '@ng-util/lazy';
 
-declare const window: any;
-declare const UE: any;
+const isSSR = !(typeof document === 'object' && !!document);
 let _hook_finished = false;
 
 export type EventTypes =
@@ -42,8 +45,8 @@ export type EventTypes =
 @Component({
   selector: 'ueditor',
   template: `
-  <textarea id="{{id}}" class="ueditor-textarea"></textarea>
-  <div *ngIf="loading" class="loading" [innerHTML]="loadingTip"></div>
+    <textarea id="{{ id }}" class="ueditor-textarea"></textarea>
+    <div *ngIf="loading" class="loading" [innerHTML]="loadingTip"></div>
   `,
   preserveWhitespaces: false,
   styles: [
@@ -67,65 +70,67 @@ export type EventTypes =
 })
 export class UEditorComponent
   implements OnInit, AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
-  private instance: any;
-  private value: string;
-  private inited = false;
-  private events: any = {};
-
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
-
-  loading = true;
-  id = `_ueditor-${Math.random()
-    .toString(36)
-    .substring(2)}`;
-
-  @Input()
-  config: any;
-  @Input()
-  loadingTip = '加载中...';
   @Input()
   set disabled(value: boolean) {
     this._disabled = value;
     this.setDisabled();
   }
-  private _disabled = false;
-
-  /** 延迟初始化 */
-  @Input()
-  delay = 50;
-
-  @Output()
-  readonly onPreReady = new EventEmitter<UEditorComponent>();
-  @Output()
-  readonly onReady = new EventEmitter<UEditorComponent>();
-  @Output()
-  readonly onDestroy = new EventEmitter();
 
   constructor(
     private ss: ScriptService,
+    private lazySrv: NuLazyService,
     private cog: UEditorConfig,
+    @Inject(DOCUMENT) private doc: any,
     private cd: ChangeDetectorRef,
     private zone: NgZone,
   ) {}
 
-  ngOnInit() {
+  /**
+   * 获取UE实例
+   *
+   * @readonly
+   */
+  get Instance(): any {
+    return this.instance;
+  }
+  private instance: any;
+  private value: string;
+  private inited = false;
+  private events: any = {};
+
+  loading = true;
+  id = `_ueditor-${Math.random().toString(36).substring(2)}`;
+
+  @Input() config: any;
+  @Input() loadingTip = '加载中...';
+  private _disabled = false;
+  @Input() @InputNumber() delay = 50;
+  @Output() readonly onPreReady = new EventEmitter<UEditorComponent>();
+  @Output() readonly onReady = new EventEmitter<UEditorComponent>();
+  @Output() readonly onDestroy = new EventEmitter();
+
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  private _getWin(): any {
+    return this.doc.defaultView || window;
+  }
+
+  ngOnInit(): void {
     this.inited = true;
   }
 
   ngAfterViewInit(): void {
+    if (isSSR) {
+      return;
+    }
     // 已经存在对象无须进入懒加载模式
-    if (window.UE) {
+    if (this._getWin().UE) {
       this.initDelay();
       return;
     }
 
-    this.ss
-      .load(this.cog.js)
-      .getChangeEmitter()
-      .subscribe(res => {
-        this.initDelay();
-      });
+    this.ss.load(this.cog.js).change.subscribe(() => this.initDelay());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -135,14 +140,19 @@ export class UEditorComponent
     }
   }
 
-  private initDelay() {
+  private initDelay(): void {
     setTimeout(() => this.init(), this.delay);
   }
 
-  private init() {
-    if (!window.UE) throw new Error('uedito js文件加载失败');
+  private init(): void {
+    const UE = this._getWin().UE;
+    if (!UE) {
+      throw new Error('uedito js文件加载失败');
+    }
 
-    if (this.instance) return;
+    if (this.instance) {
+      return;
+    }
 
     // registrer hook
     if (this.cog.hook && !_hook_finished) {
@@ -152,13 +162,15 @@ export class UEditorComponent
 
     this.onPreReady.emit(this);
 
-    const opt = Object.assign({}, this.cog.options, this.config);
+    const opt = { ...this.cog.options, ...this.config };
 
     this.zone.runOutsideAngular(() => {
       const ueditor = UE.getEditor(this.id, opt);
       ueditor.ready(() => {
         this.instance = ueditor;
-        if (this.value) this.instance.setContent(this.value);
+        if (this.value) {
+          this.instance.setContent(this.value);
+        }
         this.onReady.emit(this);
       });
 
@@ -172,10 +184,10 @@ export class UEditorComponent
     this.cd.detectChanges();
   }
 
-  private destroy() {
+  private destroy(): void {
     if (this.instance) {
       this.zone.runOutsideAngular(() => {
-        Object.keys(this.events).forEach(name =>
+        Object.keys(this.events).forEach((name) =>
           this.instance.removeListener(name, this.events[name]),
         );
         this.instance.removeListener('ready');
@@ -187,8 +199,10 @@ export class UEditorComponent
     this.onDestroy.emit();
   }
 
-  private setDisabled() {
-    if (!this.instance) return;
+  private setDisabled(): void {
+    if (!this.instance) {
+      return;
+    }
     if (this._disabled) {
       this.instance.setDisabled();
     } else {
@@ -197,23 +211,13 @@ export class UEditorComponent
   }
 
   /**
-   * 获取UE实例
-   *
-   * @readonly
-   */
-  get Instance(): any {
-    return this.instance;
-  }
-
-  /**
    * 设置编辑器语言
    */
-  setLanguage(lang: 'zh-cn' | 'en') {
-    this.ss
-      .loadScript(
-        `${this.cog.options.UEDITOR_HOME_URL}/lang/${lang}/${lang}.js`,
-      )
-      .then(res => {
+  setLanguage(lang: 'zh-cn' | 'en'): void {
+    const UE = this._getWin().UE;
+    this.lazySrv
+      .load(`${this.cog.options.UEDITOR_HOME_URL}/lang/${lang}/${lang}.js`)
+      .then(() => {
         this.destroy();
 
         // 清空语言
@@ -230,8 +234,10 @@ export class UEditorComponent
   /**
    * 添加编辑器事件
    */
-  addListener(eventName: EventTypes, fn: Function): void {
-    if (this.events[eventName]) return;
+  addListener(eventName: EventTypes, fn: any): void {
+    if (this.events[eventName]) {
+      return;
+    }
     this.events[eventName] = fn;
     this.instance.addListener(eventName, fn);
   }
@@ -240,19 +246,15 @@ export class UEditorComponent
    * 移除编辑器事件
    */
   removeListener(eventName: EventTypes): void {
-    if (!this.events[eventName]) return;
+    if (!this.events[eventName]) {
+      return;
+    }
     this.instance.removeListener(eventName, this.events[eventName]);
     delete this.events[eventName];
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy();
-  }
-
-  // reuse-tab: http://ng-alain.com/components/reuse-tab#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F
-  _onReuseInit() {
-    this.destroy();
-    this.initDelay();
   }
 
   writeValue(value: string): void {

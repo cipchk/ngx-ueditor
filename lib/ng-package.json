@@ -1,0 +1,14 @@
+{
+  "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../publish",
+  "deleteDestPath": true,
+  "lib": {
+    "entryFile": "index.ts"
+  },
+  "whitelistedNonPeerDependencies": [
+    "tslib",
+    "angular",
+    "@ng-util/util",
+    "@ng-util/lazy"
+  ]
+}
