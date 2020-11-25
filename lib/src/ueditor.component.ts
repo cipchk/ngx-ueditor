@@ -1,4 +1,3 @@
-// tslint:disable: no-output-on-prefix no-redundant-jsdoc
 import {
   Component,
   Input,
@@ -87,8 +86,6 @@ export class UEditorComponent
 
   /**
    * 获取UE实例
-   *
-   * @readonly
    */
   get Instance(): any {
     return this.instance;
