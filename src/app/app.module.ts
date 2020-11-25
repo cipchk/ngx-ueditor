@@ -26,7 +26,7 @@ import {
         { path: 'dev', component: DevComponent },
         { path: 'modal', component: DemoModalComponent },
       ],
-      { useHash: true },
+      { useHash: true, relativeLinkResolution: 'legacy' },
     ),
     CommonModule,
     HighlightJsModule,
