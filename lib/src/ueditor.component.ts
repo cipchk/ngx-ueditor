@@ -17,7 +17,6 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { InputNumber } from '@ng-util/util';
-import { ScriptService } from './script.service';
 import { UEditorConfig } from './ueditor.config';
 import { NuLazyService } from '@ng-util/lazy';
 
@@ -76,7 +75,6 @@ export class UEditorComponent
   }
 
   constructor(
-    private ss: ScriptService,
     private lazySrv: NuLazyService,
     private cog: UEditorConfig,
     @Inject(DOCUMENT) private doc: any,
@@ -127,7 +125,8 @@ export class UEditorComponent
       return;
     }
 
-    this.ss.load(this.cog.js).change.subscribe(() => this.initDelay());
+    this.lazySrv.monitor(this.cog.js).subscribe(() => this.initDelay());
+    this.lazySrv.load(this.cog.js);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -181,7 +180,7 @@ export class UEditorComponent
     this.cd.detectChanges();
   }
 
-  private destroy(): void {
+  destroy(): void {
     if (this.instance) {
       this.zone.runOutsideAngular(() => {
         Object.keys(this.events).forEach((name) =>
@@ -189,8 +188,12 @@ export class UEditorComponent
         );
         this.instance.removeListener('ready');
         this.instance.removeListener('contentChange');
-        this.instance.destroy();
-        this.instance = null;
+        // 由于此时 Angular 已经移除 DOM，可能会引起内部无法访问产生异常
+        // https://github.com/cipchk/ngx-ueditor/issues/62
+        try {
+          this.instance.destroy();
+          this.instance = null;
+        } catch {}
       });
     }
     this.onDestroy.emit();
@@ -210,9 +213,9 @@ export class UEditorComponent
   /**
    * 设置编辑器语言
    */
-  setLanguage(lang: 'zh-cn' | 'en'): void {
+  setLanguage(lang: 'zh-cn' | 'en'): PromiseLike<void> {
     const UE = this._getWin().UE;
-    this.lazySrv
+    return this.lazySrv
       .load(`${this.cog.options.UEDITOR_HOME_URL}/lang/${lang}/${lang}.js`)
       .then(() => {
         this.destroy();
