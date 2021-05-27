@@ -5,7 +5,7 @@
   "lib": {
     "entryFile": "index.ts"
   },
-  "whitelistedNonPeerDependencies": [
+  "allowedNonPeerDependencies": [
     "tslib",
     "angular",
     "@ng-util/util",

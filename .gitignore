@@ -5,10 +5,10 @@
 /tmp
 /out-tsc
 /publish
+/yarn.lock
 
 # dependencies
 /node_modules
-/yarn.lock
 
 # IDEs and editors
 /.idea

@@ -2,16 +2,14 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "alwaysStrict": true,
-    "sourceMap": true,
     "inlineSources": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true,
     "strictFunctionTypes": true,
     "stripInternal": true
   },
-  "files": ["./src/module.ts"],
+  "files": ["./src/ueditor.module.ts"],
   "include": ["**/*.ts"],
   "angularCompilerOptions": {
-    "enableIvy": false
+    "enableIvy": true,
+    "compilationMode": "partial"
   }
 }

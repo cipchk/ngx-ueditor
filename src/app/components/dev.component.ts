@@ -1,18 +1,11 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { UEditorComponent } from 'ngx-ueditor';
 
 declare const UE: any;
 
 @Component({
   selector: 'dev',
-  templateUrl: './dev.component.html'
+  templateUrl: './dev.component.html',
 })
 export class DevComponent {
   constructor(private el: ElementRef) {}
@@ -25,10 +18,10 @@ export class DevComponent {
   onPreReady(comp: UEditorComponent) {
     UE.registerUI(
       'button',
-      function(editor, uiName) {
+      function (editor: any, uiName: any) {
         // 注册按钮执行时的command命令，使用命令默认就会带有回退操作
         editor.registerCommand(uiName, {
-          execCommand: function() {
+          execCommand: function () {
             alert('execCommand:' + uiName);
           },
         });
@@ -41,13 +34,13 @@ export class DevComponent {
           // 添加额外样式，指定icon图标，这里默认使用一个重复的icon
           cssRules: 'background-position: -500px 0;',
           // 点击时执行的命令
-          onclick: function() {
+          onclick: function () {
             // 这里可以不用执行命令,做你自己的操作也可
             editor.execCommand(uiName);
           },
         });
         // 当点到编辑内容上时，按钮要做的状态反射
-        editor.addListener('selectionchange', function() {
+        editor.addListener('selectionchange', function () {
           const state = editor.queryCommandState(uiName);
           if (state === -1) {
             btn.setDisabled(true);
