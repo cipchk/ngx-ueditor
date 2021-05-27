@@ -66,8 +66,7 @@ export type EventTypes =
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UEditorComponent
-  implements OnInit, AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class UEditorComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
   set disabled(value: boolean) {
     this._disabled = value;
@@ -89,7 +88,7 @@ export class UEditorComponent
     return this.instance;
   }
   private instance: any;
-  private value: string;
+  private value!: string;
   private inited = false;
   private events: any = {};
 
@@ -126,7 +125,7 @@ export class UEditorComponent
     }
 
     this.lazySrv.monitor(this.cog.js).subscribe(() => this.initDelay());
-    this.lazySrv.load(this.cog.js);
+    this.lazySrv.load(this.cog.js!);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -183,9 +182,7 @@ export class UEditorComponent
   destroy(): void {
     if (this.instance) {
       this.zone.runOutsideAngular(() => {
-        Object.keys(this.events).forEach((name) =>
-          this.instance.removeListener(name, this.events[name]),
-        );
+        Object.keys(this.events).forEach((name) => this.instance.removeListener(name, this.events[name]));
         this.instance.removeListener('ready');
         this.instance.removeListener('contentChange');
         // 由于此时 Angular 已经移除 DOM，可能会引起内部无法访问产生异常
@@ -215,20 +212,18 @@ export class UEditorComponent
    */
   setLanguage(lang: 'zh-cn' | 'en'): PromiseLike<void> {
     const UE = this._getWin().UE;
-    return this.lazySrv
-      .load(`${this.cog.options.UEDITOR_HOME_URL}/lang/${lang}/${lang}.js`)
-      .then(() => {
-        this.destroy();
+    return this.lazySrv.load(`${this.cog.options!.UEDITOR_HOME_URL}/lang/${lang}/${lang}.js`).then(() => {
+      this.destroy();
 
-        // 清空语言
-        if (!UE._bak_I18N) {
-          UE._bak_I18N = UE.I18N;
-        }
-        UE.I18N = {};
-        UE.I18N[lang] = UE._bak_I18N[lang];
+      // 清空语言
+      if (!UE._bak_I18N) {
+        UE._bak_I18N = UE.I18N;
+      }
+      UE.I18N = {};
+      UE.I18N[lang] = UE._bak_I18N[lang];
 
-        this.initDelay();
-      });
+      this.initDelay();
+    });
   }
 
   /**

@@ -14,13 +14,13 @@ export class UEditorConfig {
   /**
    * Ueditor [前端配置项](http://fex.baidu.com/ueditor/#start-config)
    */
-  options: UEditorOptions;
+  options?: UEditorOptions;
 
   /**
    * 指定ueditor.js和config.js路径，这是启动 Ueditor 必备
    * - **务必**指定 `options.UEDITOR_HOME_URL`（虽然默认会根据 `config.js` 路径获取，但某些环境下更有保证）
    */
-  js: string[];
+  js?: string[];
 
   /**
    * Hook

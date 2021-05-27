@@ -7,8 +7,8 @@ import { UEditorComponent } from 'ngx-ueditor';
 })
 export class DemoComponent {
   @ViewChild('full')
-  full: UEditorComponent;
-  full_source: string;
+  full!: UEditorComponent;
+  full_source = '';
 
   constructor(private el: ElementRef) {}
 
@@ -38,9 +38,7 @@ export class DemoComponent {
 
   setContent(isAppendTo: boolean) {
     const arr = [];
-    arr.push(
-      `使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容`,
-    );
+    arr.push(`使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容`);
     this.full.Instance.setContent('欢迎使用ueditor', isAppendTo);
     alert(arr.join('\n'));
   }
@@ -74,7 +72,7 @@ export class DemoComponent {
     alert(txt);
   }
 
-  focus: boolean | string;
+  focus!: boolean | string;
   addListenerFocus() {
     this.full.addListener('focus', () => {
       this.focus = `fire focus in ${new Date().getTime()}`;
@@ -86,16 +84,16 @@ export class DemoComponent {
     this.focus = '已移除监听';
   }
 
-  config_source: string;
+  config_source!: string;
   config: any = {
     toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold']],
     autoClearinitialContent: true,
     wordCount: false,
   };
 
-  form_source: string;
+  form_source!: string;
 
-  custom_source: string;
+  custom_source!: string;
   custom: any = {
     toolbars: [['FullScreen', 'Source', 'Undo', 'Redo', 'Bold', 'button']],
   };
