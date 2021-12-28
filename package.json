@@ -55,6 +55,6 @@
     "eslint": "^8.5.0",
     "ng-packagr": "^13.1.2",
     "ngx-highlight-js": "^13.0.0",
-    "ngx-bootstrap": "^7.1.2"
+    "ngx-bootstrap": "^8.0.0-RC.5"
   }
 }
