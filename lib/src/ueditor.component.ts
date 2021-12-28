@@ -13,6 +13,7 @@ import {
   SimpleChanges,
   NgZone,
   Inject,
+  SimpleChange,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -128,7 +129,7 @@ export class UEditorComponent implements OnInit, AfterViewInit, OnChanges, OnDes
     this.lazySrv.load(this.cog.js!);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: { [P in keyof this]?: SimpleChange } & SimpleChanges): void {
     if (this.inited && changes.config) {
       this.destroy();
       this.initDelay();
