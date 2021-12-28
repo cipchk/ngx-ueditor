@@ -1,6 +1,6 @@
 {
   "name": "ngx-ueditor",
-  "version": "12.0.0",
+  "version": "13.0.0",
   "description": "Angular for Baidu UEditor",
   "author": "cipchk <cipchk@qq.com>",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://cipchk.github.io/ngx-ueditor/",
   "dependencies": {
-    "@ng-util/lazy": "^12.0.0",
-    "@ng-util/util": "^12.0.0"
+    "@ng-util/lazy": "^13.0.0",
+    "@ng-util/util": "^13.0.0"
   }
 }
