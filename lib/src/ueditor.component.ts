@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { InputNumber } from '@ng-util/util';
+import { InputNumber } from '@ng-util/util/convert';
 import { UEditorConfig } from './ueditor.config';
 import { NuLazyService } from '@ng-util/lazy';
 
@@ -66,6 +66,7 @@ export type EventTypes =
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class UEditorComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy, ControlValueAccessor {
   @Input()
