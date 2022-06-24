@@ -4,8 +4,7 @@ import { UEditorComponent } from './ueditor.component';
 import { UEditorConfig } from './ueditor.config';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [UEditorComponent],
+  imports: [CommonModule, UEditorComponent],
   exports: [UEditorComponent],
 })
 export class UEditorModule {
