@@ -1,3 +1,5 @@
+# 当前 [UEditor](https://github.com/fex-team/ueditor) 已经不再维护的情况下，为了不误导大家，从 Angular 14 开始将不再维护。可以尝试使用 [ngx-tinymce](https://www.npmjs.com/package/ngx-tinymce) 来代替。
+
 # ngx-ueditor
 Angular2.x for Baidu UEditor（[UMeditor](https://github.com/cipchk/ngx-umeditor)）
 
